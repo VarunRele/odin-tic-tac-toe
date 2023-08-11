@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Roboto:wght@100;300;400;500;700;900&display=swap');
 
 * {
     padding: 0;
@@ -89,6 +89,19 @@ main {
 #cell-9 {
     border-top: var(--cell-border);
     border-left: var(--cell-border);
+}
+
+.grid_cell {
+    /* background-color: aqua; */
+    /* padding: 10px; */
+    font-family: 'Marcellus', serif;
+    font-size: 6rem;
+    text-align: center;
+}
+
+.grid_cell:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 .buttons {
