@@ -3,11 +3,30 @@ let SetPage = (() => {
 
     let setDom = () => {
         querySelectors = {
-            grid_div: document.querySelector(".grid")
+            grid_div: document.querySelector(".grid"),
+            reset_btn: document.querySelector("#reset"),
+            start_btn: document.querySelector("#start"),
+            pname_input: document.querySelectorAll("input"),
         }
     }
 
     setDom()
+
+    querySelectors.reset_btn.addEventListener("click", (e) => {
+        SetGrid.destroyGrid()
+        SetGrid.render()
+    })
+
+    querySelectors.start_btn.addEventListener("click", (e) => {
+        let p = []
+        querySelectors.pname_input.forEach(name => {
+            if (name.value == "") {
+                alert("Enter player names")
+                return
+            }
+        })
+        SetGrid.render()
+    })
 
     return {
         getDom: () => querySelectors 
@@ -40,10 +59,15 @@ let SetGrid = (() => {
         grid_array[id-1] = mark
     }
 
+    let destroyGrid = () => {
+        grid_div.innerHTML = ""
+    }
+
     return {
         render,
         getGridArray: () => grid_array,
         setGridArray,
+        destroyGrid,
     }
 })();
 
@@ -69,7 +93,7 @@ let GameController = (() => {
     let initializePlayer = () => {
         players = [Player("P1", "X"), Player("P2", "O")]
     }
-    let playerChance = 1
+    let playerChance = 0
     initializePlayer()
 
     let checkEmptyCell = (id) => {
@@ -110,7 +134,11 @@ let GameController = (() => {
         winState.forEach((winpos, index) => {
             const [a, b, c] = winpos
             if (grid_array[a] != "" && grid_array[a] === grid_array[b] && grid_array[b] === grid_array[c]) {
-                console.log("Over")
+                playerChance = playerChance == 0 ? 1 : 0
+                alert(`Player ${players[playerChance].name} won.`)
+                SetGrid.destroyGrid()
+                SetGrid.render()
+                playerChance = 0
             }
         })
     }
@@ -124,4 +152,3 @@ let GameController = (() => {
     }
 })();
 
-SetGrid.render()
