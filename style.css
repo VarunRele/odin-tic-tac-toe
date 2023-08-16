@@ -131,3 +131,45 @@ main {
 .buttons button:active {
     background-color: purple;
 }
+
+.player-name-section {
+    display: flex;
+    justify-content: center;
+    /* border: 1px solid black; */
+    gap: 20px;
+}
+
+.player-name-section div {
+    display: flex;
+    flex-direction: column;
+    font-size: large;
+}
+
+.player-name-section div input {
+    outline: none;
+    border: 1px solid black;
+    padding: 8px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#alert {
+    border: 1px solid black;
+    padding: 2rem;
+    font-size: x-large;
+    border-radius: 10px;
+    text-align: center;
+    visibility: hidden;
+}
+
+#alert.win {
+    border: 1px solid green;
+    background-color: rgba(0, 128, 0, 0.189);
+    visibility: visible;
+}
+
+#alert.error {
+    border: 1px solid red;
+    background-color: rgba(128, 0, 0, 0.189);
+    visibility: visible;
+}

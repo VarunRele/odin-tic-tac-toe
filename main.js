@@ -1,5 +1,6 @@
 let SetPage = (() => { 
     let querySelectors = {}
+    let start = false
 
     let setDom = () => {
         querySelectors = {
@@ -7,29 +8,53 @@ let SetPage = (() => {
             reset_btn: document.querySelector("#reset"),
             start_btn: document.querySelector("#start"),
             pname_input: document.querySelectorAll("input"),
+            alert_div: document.querySelector("#alert")
         }
     }
 
     setDom()
 
     querySelectors.reset_btn.addEventListener("click", (e) => {
-        SetGrid.destroyGrid()
-        SetGrid.render()
+        if (start) {
+            SetGrid.destroyGrid()
+            SetGrid.render()
+        }
     })
+    
+    let alertFunc = (type, duration=2000, name=null) => {
+        querySelectors.alert_div.classList.toggle(type)
+        if (type == "error") {
+            querySelectors.alert_div.innerHTML = `<h4>Enter Player Names!!</h4>`
+        } else {
+            querySelectors.alert_div.innerHTML = `<h4>Player ${name} won!!!</h4>`
+        }
+        
+        setTimeout(() => {
+            querySelectors.alert_div.classList.toggle(type)
+            querySelectors.alert_div.innerHTML = ``
+        }, duration)
+    }
 
     querySelectors.start_btn.addEventListener("click", (e) => {
         let p = []
-        querySelectors.pname_input.forEach(name => {
-            if (name.value == "") {
-                alert("Enter player names")
-                return
-            }
+        querySelectors.pname_input.forEach((name, index) => {
+            p.push(name.value)
         })
-        SetGrid.render()
+        if (p[0] == "" || p[1] == "") {
+            alertFunc("error")
+            // alert("Enter Player Names!!")
+        }
+        else {
+            GameController.initializePlayer(p[0], p[1])
+            SetGrid.destroyGrid()
+            SetGrid.render()
+            start = true
+        } 
     })
 
     return {
-        getDom: () => querySelectors 
+        getDom: () => querySelectors,
+        alertFunc,
     }
 })();
 
@@ -90,11 +115,10 @@ let GameController = (() => {
         [2, 4, 6]
     ]
 
-    let initializePlayer = () => {
-        players = [Player("P1", "X"), Player("P2", "O")]
+    let initializePlayer = (p1name, p2name) => {
+        players = [Player(p1name, "X"), Player(p2name, "O")]
     }
     let playerChance = 0
-    initializePlayer()
 
     let checkEmptyCell = (id) => {
         let grid_array = SetGrid.getGridArray()
@@ -129,13 +153,18 @@ let GameController = (() => {
         checkOver()
     }
 
+    let winAlert = (player_name) => {
+
+    }
+
     let checkOver = () => {
         let grid_array = SetGrid.getGridArray()
         winState.forEach((winpos, index) => {
             const [a, b, c] = winpos
             if (grid_array[a] != "" && grid_array[a] === grid_array[b] && grid_array[b] === grid_array[c]) {
                 playerChance = playerChance == 0 ? 1 : 0
-                alert(`Player ${players[playerChance].name} won.`)
+                // players[playerChance].name
+                SetPage.alertFunc("win", 3000, players[playerChance].name)
                 SetGrid.destroyGrid()
                 SetGrid.render()
                 playerChance = 0
@@ -149,6 +178,7 @@ let GameController = (() => {
         hoverMark,
         handleClick,
         hoverOut,
+        initializePlayer,
     }
 })();
 
